@@ -1,3 +1,6 @@
+-- Before executing these queries, create tables and import data (see create_tables.sql)
+
+
 /* Warm-up Queries */
 
 -- Return mystery book titles & their ISBNs
@@ -14,14 +17,16 @@ WHERE author.deathday IS null;
 
 /* Write a script for loaning a book out (pick any patron and book) */
 
-SET @book_loaned=31, @patron=42;
+-- Use variables so you can loan different books to different patrons
+SET @book_loaned=31, @patron=42; 
 
 -- Change available to false for book
 UPDATE book SET available=0 WHERE book_id = @book_loaned;
 
 -- Add a record to the loan table with today's date as the date out and the patron and book IDs
-INSERT INTO loan(date_out, patron_id, book_id)
-VALUES(CURRENT_DATE(), @patron, @book_loaned);
+-- Also be sure to set the date in to null
+INSERT INTO loan(date_out, date_in, patron_id, book_id)
+VALUES(CURRENT_DATE(), null, @patron, @book_loaned);
 
 -- Update the patron's record with the loan ID
 UPDATE patron SET loan_id=(SELECT loan_id FROM loan WHERE (patron_id = @patron) AND (date_out = CURRENT_DATE())) WHERE patron_id = @patron;
@@ -29,8 +34,10 @@ UPDATE patron SET loan_id=(SELECT loan_id FROM loan WHERE (patron_id = @patron) 
 
 /* Write a script for checking a book back in */
 
--- Change available to true for book
+-- Use variable to return a different book each time you run the script
 SET @book_returned=13;
+
+-- Change available to true for book
 UPDATE book SET available=1 WHERE book_id = @book_returned;
 
 -- Update record to the loan table with today's date as the date in
@@ -50,7 +57,7 @@ FROM patron
 INNER JOIN loan ON patron.loan_id = loan.loan_id
 INNER JOIN book ON book.book_id = loan.book_id
 INNER JOIN genre ON genre.genre_id = book.genre_id
-WHERE loan.date_in IS null;
+WHERE loan.date_in IS null; /* You could also do: loan.date_out IS NOT null */
 
 
 /* Bonus missions */
