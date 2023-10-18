@@ -50,6 +50,12 @@ SET @book_loan_id=(
 	WHERE (book_id = @returned_book_id) AND (date_in IS null)
 );
 
+-- Lookup patron id and store in a variable
+SET @returning_patron_id = (
+	SELECT patron_id from loan
+    WHERE loan_id = @book_loan_id
+);
+
 -- Change available to true for book
 UPDATE book 
 SET available=1 
@@ -63,10 +69,7 @@ WHERE loan_id = @book_loan_id;
 -- Update the patron's record to set loan_id to null
 UPDATE patron 
 SET loan_id=null 
-WHERE patron_id = (
-	SELECT patron_id FROM loan 
-	WHERE loan_id = @book_loan_id
-);
+WHERE patron_id = @returning_patron_id;
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
