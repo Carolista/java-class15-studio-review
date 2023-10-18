@@ -24,9 +24,8 @@ SET @book_loaned=31, @patron=42;
 UPDATE book SET available=0 WHERE book_id = @book_loaned;
 
 -- Add a record to the loan table with today's date as the date out and the patron and book IDs
--- Also be sure to set the date in to null
-INSERT INTO loan(date_out, date_in, patron_id, book_id)
-VALUES(CURRENT_DATE(), null, @patron, @book_loaned);
+INSERT INTO loan(date_out, patron_id, book_id)
+VALUES(CURRENT_DATE(), @patron, @book_loaned);
 
 -- Update the patron's record with the loan ID
 UPDATE patron SET loan_id=(SELECT loan_id FROM loan WHERE (patron_id = @patron) AND (date_out = CURRENT_DATE())) WHERE patron_id = @patron;
