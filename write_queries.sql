@@ -64,7 +64,7 @@ WHERE loan_id = @book_loan_id;
 UPDATE patron 
 SET loan_id=null 
 WHERE patron_id = (
-	SELECT patron_id from loan 
+	SELECT patron_id FROM loan 
 	WHERE loan_id = @book_loan_id
 );
 
