@@ -56,7 +56,7 @@ FROM patron
 INNER JOIN loan ON patron.loan_id = loan.loan_id
 INNER JOIN book ON book.book_id = loan.book_id
 INNER JOIN genre ON genre.genre_id = book.genre_id
-WHERE loan.date_in IS null; /* You could also do: loan.date_out IS NOT null */
+WHERE loan.date_in IS null;
 
 
 /* Bonus missions */
