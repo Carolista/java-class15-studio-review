@@ -71,7 +71,7 @@ ORDER BY genre.genres;
 -- Modify either the book or reference table to prevent a reference book from being checked out
 UPDATE book
 SET available = CASE
-	WHEN genre_id = 25 THEN 1
+	WHEN genre_id = 25 THEN 0
     ELSE available
     END
-WHERE book_id = 32;
+WHERE book_id > 0; /* Check all books */
